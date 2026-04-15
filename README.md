@@ -28,7 +28,7 @@
 - 🎯 **划词即问**：选中文字后 <16ms 浮出气泡（自动避让屏幕边缘）
 - 💬 **气泡内多轮对话**：答案下方常驻输入框，可一直追问下去
 - 🔁 **嵌套追问**：气泡答案里再划词，点"追问这段"自动预填
-- 🌐 **9 家 Provider**：OpenAI、Anthropic、Gemini、DeepSeek、Kimi、智谱 GLM、MiniMax、豆包、通义千问
+- 🌐 **10 家 Provider**：OpenAI、Anthropic、Gemini、DeepSeek、Kimi、智谱 GLM、MiniMax、豆包、通义千问、硅基流动
 - 🎨 **Linear 风格 UI**：深色优先，Inter 字体，半透明边框，自适应系统主题
 - 🔒 **隐私优先**：API Key 仅存本地 `chrome.storage.sync`，无任何第三方遥测；详见 [PRIVACY.md](./PRIVACY.md)
 - ⚙️ **权限最小化**：API 域走 `optional_host_permissions`，用到哪家才请求哪家
@@ -99,7 +99,7 @@ Adds a **selection-triggered follow-up bubble** to LLM chat pages (ChatGPT, Clau
 - Selection → bubble in under a frame; smart edge-avoiding placement
 - Multi-turn chat inside the bubble with persistent history
 - Nested follow-up: select text inside a bubble answer to drill deeper
-- 9 providers, auto-routing via OpenAI-compatible schema + Anthropic's native API
+- 10 providers (OpenAI, Anthropic, Gemini, DeepSeek, Kimi, Zhipu GLM, MiniMax, Doubao, Qwen, SiliconFlow), auto-routing via OpenAI-compatible schema + Anthropic's native API
 - Linear-inspired dark-first UI with Inter Variable
 - Local-only storage; no telemetry ([PRIVACY.md](./PRIVACY.md))
 - Minimum permissions: API hosts are `optional_host_permissions`, requested per-provider on first use

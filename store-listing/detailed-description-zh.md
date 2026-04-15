@@ -10,8 +10,8 @@
 💬 **气泡内多轮对话**
 答案下方常驻输入框，可以一路追问下去。在气泡里的答案里再划词，还能弹出"追问这段"，实现真正的边读边问、层层深入。
 
-🌐 **覆盖主流 9 家大模型**
-OpenAI（GPT-5.4 系列）、Anthropic（Claude 4.6）、Google Gemini、DeepSeek、月之暗面 Kimi、智谱 GLM-5.1、MiniMax M2.7、字节豆包、阿里通义千问——有一家就能用。
+🌐 **覆盖主流 10 家大模型**
+OpenAI（GPT-5.4 系列）、Anthropic（Claude 4.6）、Google Gemini、DeepSeek、月之暗面 Kimi、智谱 GLM-5.1、MiniMax M2.7、字节豆包、阿里通义千问、硅基流动 SiliconFlow——有一家就能用。
 
 🔒 **隐私优先**
 • API Key 仅保存在你本地浏览器的 chrome.storage

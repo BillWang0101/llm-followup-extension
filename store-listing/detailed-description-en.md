@@ -10,8 +10,8 @@ Highlight any text in the model's reply and a follow-up bubble pops up right nex
 💬 **Multi-turn inside the bubble**
 A persistent input at the bottom lets you keep drilling deeper. Select text inside a bubble answer and a "Ask about this" chip appears—truly recursive read-as-you-ask.
 
-🌐 **9 providers, one extension**
-OpenAI (GPT-5.4 family), Anthropic (Claude 4.6), Google Gemini, DeepSeek, Moonshot Kimi, Zhipu GLM-5.1, MiniMax M2.7, ByteDance Doubao, Alibaba Qwen. Use whichever you already pay for.
+🌐 **10 providers, one extension**
+OpenAI (GPT-5.4 family), Anthropic (Claude 4.6), Google Gemini, DeepSeek, Moonshot Kimi, Zhipu GLM-5.1, MiniMax M2.7, ByteDance Doubao, Alibaba Qwen, SiliconFlow. Use whichever you already pay for.
 
 🔒 **Privacy-first**
 • API Key stored only in chrome.storage on your device
