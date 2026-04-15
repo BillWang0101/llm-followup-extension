@@ -10,10 +10,6 @@ All notable changes to this project will be documented in this file. This projec
 - **尺寸持久化**：用户调过的尺寸保存到 `chrome.storage.local`，下次打开气泡自动恢复
 - **空态提示**：没开始对话时，气泡内部显示虚线框 + "答案会出现在这里"占位
 
-### Fixed
-- 修复 flex 布局在空气泡被拉大时按钮/输入框下移脱离卡片的问题
-- 气泡内部改用 `flex: 1 + overflow: hidden` 约束，任何尺寸下布局都稳
-
 ## [0.1.0] — 2026-04-15
 
 ### Added
