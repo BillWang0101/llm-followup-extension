@@ -70,10 +70,13 @@
 
 .card {
   /* flex 列布局：selection/textarea/row 固定高度，thread 吃剩余空间。
-     max-height 由父组件通过 inline style 传入（等于 pos.maxHeight） */
+     max-height 或 height 由父组件通过 inline style 传入 */
   display: flex;
   flex-direction: column;
+  flex: 1 1 auto;      /* 在 wrapper（flex 列）里填满 */
   min-height: 0;
+  position: relative;
+  overflow: hidden;    /* 防任何子元素溢出到卡片外 */
   background: var(--bg-panel);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
@@ -90,8 +93,59 @@
 .card > .textarea,
 .card > .row,
 .card > .hint,
-.card > .need-key {
+.card > .need-key,
+.card > .drag-handle {
   flex-shrink: 0;
+}
+
+/* ---------- Drag handle (顶部抓手) ---------- */
+.drag-handle {
+  height: 14px;
+  margin: -6px -8px 6px;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  cursor: move;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  transition: background 0.12s;
+}
+.drag-handle:hover {
+  background: var(--bg-ghost-hover);
+}
+.drag-handle-grip {
+  width: 36px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--text-quaternary);
+  opacity: 0.6;
+  transition: opacity 0.12s, width 0.12s;
+}
+.drag-handle:hover .drag-handle-grip {
+  opacity: 1;
+  width: 48px;
+}
+
+/* ---------- Resize handle (右下角) ---------- */
+.resize-handle {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  padding: 2px 3px;
+  cursor: nwse-resize;
+  color: var(--text-quaternary);
+  user-select: none;
+  border-radius: 0 0 var(--radius-lg) 0;
+  transition: color 0.12s, background 0.12s;
+}
+.resize-handle:hover {
+  color: var(--accent);
+  background: var(--bg-ghost-hover);
 }
 
 @media (prefers-color-scheme: light) {
@@ -128,13 +182,27 @@
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   background: var(--bg-ghost);
-  /* 吃 card 剩余空间，内部滚动；min-height:0 是 flex 里允许收缩的关键 */
-  flex: 1 1 auto;
-  min-height: 80px;
+  /* 吃 card 剩余空间，内部滚动；min-height:0 允许在 flex 里完全收缩 */
+  flex: 1 1 0;
+  min-height: 0;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: 8px;
+}
+
+/* 空态：还没开始对话时的 placeholder 样式——更淡更低调 */
+.thread.empty {
+  border-style: dashed;
+  background: transparent;
+  align-items: center;
+  justify-content: center;
+}
+.thread-empty-hint {
+  color: var(--text-quaternary);
+  font-size: 12px;
+  user-select: none;
+  pointer-events: none;
 }
 
 /* Scrollbar */

@@ -1,7 +1,15 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { ChatMessage, Provider } from '../../shared/types';
 import { renderMarkdown } from '../../shared/markdown';
+import { loadBubbleSize, saveBubbleSize, type BubbleSize } from '../../shared/bubble-prefs';
 import type { Pos } from './position';
+
+const MIN_W = 300;
+const MAX_W = 900;
+const MIN_H = 220;
+const EDGE = 8;
+
+function clamp(v: number, lo: number, hi: number) { return Math.max(lo, Math.min(hi, v)); }
 
 type Phase = 'idle' | 'streaming' | 'need_key' | 'need_permission' | 'error';
 
@@ -85,6 +93,16 @@ export function Bubble({
   const [phase, setPhase] = useState<Phase>('idle');
   const [err, setErr] = useState<string | null>(null);
   const [pendingProvider, setPendingProvider] = useState<Provider | null>(null);
+
+  // 拖拽位置（null = 用 pos 传入的初始位置）
+  const [userPos, setUserPos] = useState<{ top: number; left: number } | null>(null);
+  // 用户调过的尺寸（null = 自适应）
+  const [userSize, setUserSize] = useState<BubbleSize | null>(null);
+
+  // 加载上次保存的尺寸
+  useEffect(() => {
+    void loadBubbleSize().then((s) => s && setUserSize(s));
+  }, []);
   // inject 模式还是 api 模式——仅在首轮生效，有对话后固定为 api
   const [firstMode, setFirstMode] = useState<'inject' | 'api'>(canInject ? 'api' : 'api');
 
@@ -287,6 +305,63 @@ export function Bubble({
     }
   };
 
+  const onDragStart = (e: React.MouseEvent) => {
+    if (e.button !== 0) return;
+    e.preventDefault();
+    const startX = e.clientX;
+    const startY = e.clientY;
+    const baseTop = userPos?.top ?? pos.top;
+    const baseLeft = userPos?.left ?? pos.left;
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const w = userSize?.w ?? 380;
+    const h = userSize?.h ?? 300;
+
+    const onMove = (ev: MouseEvent) => {
+      const top = clamp(baseTop + ev.clientY - startY, EDGE, vh - h - EDGE);
+      const left = clamp(baseLeft + ev.clientX - startX, EDGE, vw - w - EDGE);
+      setUserPos({ top, left });
+    };
+    const onUp = () => {
+      window.removeEventListener('mousemove', onMove);
+      window.removeEventListener('mouseup', onUp);
+    };
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseup', onUp);
+  };
+
+  const onResizeStart = (e: React.MouseEvent) => {
+    if (e.button !== 0) return;
+    e.preventDefault();
+    e.stopPropagation();
+    const startX = e.clientX;
+    const startY = e.clientY;
+    const baseW = userSize?.w ?? 380;
+    // 初始高度：如果还没设置过，用 maxHeight 作为基准
+    const baseH = userSize?.h ?? Math.min(pos.maxHeight, 480);
+    const top = userPos?.top ?? pos.top;
+    const left = userPos?.left ?? pos.left;
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+
+    const onMove = (ev: MouseEvent) => {
+      const w = clamp(baseW + ev.clientX - startX, MIN_W, Math.min(MAX_W, vw - left - EDGE));
+      const h = clamp(baseH + ev.clientY - startY, MIN_H, vh - top - EDGE);
+      setUserSize({ w, h });
+    };
+    const onUp = () => {
+      window.removeEventListener('mousemove', onMove);
+      window.removeEventListener('mouseup', onUp);
+      // 持久化最终尺寸
+      setUserSize((s) => {
+        if (s) void saveBubbleSize(s);
+        return s;
+      });
+    };
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseup', onUp);
+  };
+
   const turnCountHint = useMemo(() => {
     const n = turns.filter((m) => m.role === 'user').length;
     return n > 1 ? `多轮对话 · ${n} 轮` : null;
@@ -295,10 +370,25 @@ export function Bubble({
   return (
     <div
       className="wrapper"
-      style={{ top: pos.top, left: pos.left, maxHeight: pos.maxHeight }}
+      style={{
+        top: userPos?.top ?? pos.top,
+        left: userPos?.left ?? pos.left,
+        width: userSize?.w ?? undefined,
+        // userSize 优先用 height；否则用 maxHeight 让 card 按内容自适应
+        height: userSize?.h ?? undefined,
+        maxHeight: userSize ? undefined : pos.maxHeight,
+      }}
       onMouseDown={(e) => e.stopPropagation()}
     >
-      <div className="card" style={{ maxHeight: pos.maxHeight }}>
+      <div className="card">
+        <div
+          className="drag-handle"
+          onMouseDown={onDragStart}
+          title="按住拖动气泡"
+          aria-label="拖拽手柄"
+        >
+          <span className="drag-handle-grip" />
+        </div>
         <div className="selection" title={selection}>
           {selection}
         </div>
@@ -345,8 +435,11 @@ export function Bubble({
           </div>
         ) : null}
 
-        {hasApiTurns && (
-          <div className="thread" ref={threadRef}>
+        {phase !== 'need_key' && phase !== 'need_permission' && (
+          <div className={`thread ${hasApiTurns ? '' : 'empty'}`} ref={threadRef}>
+            {!hasApiTurns && (
+              <div className="thread-empty-hint">答案会出现在这里</div>
+            )}
             {turns.map((m, i) => {
               const isStreaming = phase === 'streaming' && i === streamingIdxRef.current;
               const empty = !m.content;
@@ -464,6 +557,17 @@ export function Bubble({
             {phase === 'error' && err && <div className="hint err">出错：{err}</div>}
           </>
         )}
+
+        <div
+          className="resize-handle"
+          onMouseDown={onResizeStart}
+          title="拖动调整大小"
+          aria-label="缩放手柄"
+        >
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M13 7L7 13M13 11L11 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+          </svg>
+        </div>
       </div>
     </div>
   );
