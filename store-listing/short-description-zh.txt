@@ -1,0 +1,1 @@
+在大模型对话网页里划词即问，答案就地浮现。支持 OpenAI / Claude / Gemini / DeepSeek / Kimi / GLM / MiniMax / 豆包 / 通义。

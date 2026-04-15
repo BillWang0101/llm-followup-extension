@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" fill="none">
+  <!-- Background: rounded square with indigo gradient -->
+  <rect width="128" height="128" rx="28" fill="url(#bg)" />
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="128" y2="128" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#7170ff" />
+      <stop offset="1" stop-color="#5e6ad2" />
+    </linearGradient>
+  </defs>
+
+  <!-- Selection underline (bottom-left) suggesting "highlighted text" -->
+  <rect x="22" y="86" width="46" height="6" rx="3" fill="#ffffff" fill-opacity="0.35" />
+  <rect x="22" y="96" width="30" height="6" rx="3" fill="#ffffff" fill-opacity="0.35" />
+
+  <!-- Speech bubble popping from selection -->
+  <path
+    d="M 58 30
+       Q 58 22 66 22
+       L 102 22
+       Q 110 22 110 30
+       L 110 60
+       Q 110 68 102 68
+       L 86 68
+       L 78 80
+       L 78 68
+       L 66 68
+       Q 58 68 58 60
+       Z"
+    fill="#ffffff"
+  />
+
+  <!-- Question mark inside bubble -->
+  <path
+    d="M 78 36
+       Q 78 32 82 32
+       Q 86 32 86 36
+       Q 86 39 84 41
+       L 84 48"
+    stroke="#5e6ad2"
+    stroke-width="4"
+    stroke-linecap="round"
+    fill="none"
+  />
+  <circle cx="84" cy="56" r="2.5" fill="#5e6ad2" />
+</svg>

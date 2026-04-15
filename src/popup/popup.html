@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <title>LLM 旁注追问</title>
+    <style>
+      :root {
+        color-scheme: dark light;
+
+        --bg: #0f1011;
+        --bg-surface: #191a1b;
+        --text-primary: #f7f8f8;
+        --text-secondary: #d0d6e0;
+        --text-tertiary: #8a8f98;
+        --text-quaternary: #62666d;
+        --brand: #5e6ad2;
+        --brand-hover: #828fff;
+        --accent: #7170ff;
+        --border-subtle: rgba(255, 255, 255, 0.05);
+        --border: rgba(255, 255, 255, 0.08);
+        --bg-ghost: rgba(255, 255, 255, 0.02);
+        --bg-ghost-hover: rgba(255, 255, 255, 0.05);
+        --success: #10b981;
+        --danger: #f85149;
+      }
+
+      @media (prefers-color-scheme: light) {
+        :root {
+          --bg: #ffffff;
+          --bg-surface: #f5f6f7;
+          --text-primary: #08090a;
+          --text-secondary: #3d4248;
+          --text-tertiary: #6b7280;
+          --text-quaternary: #8a8f98;
+          --border-subtle: rgba(0, 0, 0, 0.05);
+          --border: rgba(0, 0, 0, 0.09);
+          --bg-ghost: rgba(0, 0, 0, 0.02);
+          --bg-ghost-hover: rgba(0, 0, 0, 0.05);
+        }
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        font-family: 'Inter Variable', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif;
+        font-feature-settings: 'cv01', 'ss03';
+        width: 280px;
+        margin: 0;
+        padding: 14px 16px;
+        background: var(--bg);
+        color: var(--text-primary);
+        font-size: 13px;
+        line-height: 1.5;
+        letter-spacing: -0.13px;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      h1 {
+        font-size: 14px;
+        font-weight: 590;
+        margin: 0 0 12px;
+        color: var(--text-primary);
+        letter-spacing: -0.15px;
+      }
+
+      .row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin: 8px 0;
+      }
+
+      .row .label { color: var(--text-tertiary); font-size: 12px; font-weight: 510; }
+      .row .value { color: var(--text-secondary); font-size: 12px; }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 2px 9px;
+        border-radius: 9999px;
+        font-size: 11px;
+        font-weight: 510;
+        background: rgba(16, 185, 129, 0.12);
+        color: var(--success);
+        border: 1px solid rgba(16, 185, 129, 0.25);
+      }
+      .pill.off {
+        background: rgba(248, 81, 73, 0.12);
+        color: var(--danger);
+        border-color: rgba(248, 81, 73, 0.25);
+      }
+      .pill .dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: currentColor;
+      }
+
+      .muted { color: var(--text-tertiary); font-size: 12px; line-height: 1.55; }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 6px 12px;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        background: var(--bg-ghost);
+        color: var(--text-secondary);
+        text-decoration: none;
+        font: inherit;
+        font-size: 12px;
+        font-weight: 510;
+        cursor: pointer;
+        transition: background 0.1s, color 0.1s;
+      }
+      .btn:hover {
+        background: var(--bg-ghost-hover);
+        color: var(--text-primary);
+      }
+      .btn.primary {
+        background: var(--brand);
+        border-color: rgba(255, 255, 255, 0.08);
+        color: #ffffff;
+      }
+      .btn.primary:hover { background: var(--brand-hover); }
+
+      hr {
+        border: 0;
+        border-top: 1px solid var(--border-subtle);
+        margin: 12px 0;
+      }
+
+      kbd {
+        font-family: 'Berkeley Mono', ui-monospace, monospace;
+        background: var(--bg-ghost-hover);
+        border: 1px solid var(--border-subtle);
+        border-radius: 4px;
+        padding: 1px 6px;
+        font-size: 11px;
+        color: var(--text-secondary);
+      }
+
+      .btn-group { display: flex; gap: 6px; }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="./popup.tsx"></script>
+  </body>
+</html>
